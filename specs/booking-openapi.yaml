@@ -1,0 +1,34 @@
+paths:
+  /booking/{id}:
+    get:
+      summary: Get a specific booking by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Booking details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Booking' }
+        '404':
+          description: Booking not found
+components:
+  schemas:
+    Booking:
+      type: object
+      required: [firstname, lastname, totalprice, depositpaid, bookingdates]
+      properties:
+        firstname: { type: string }
+        lastname:  { type: string }
+        totalprice: { type: number, minimum: 0 }
+        depositpaid: { type: boolean }
+        bookingdates:
+          type: object
+          required: [checkin, checkout]
+          properties:
+            checkin:  { type: string, format: date }
+            checkout: { type: string, format: date }
+        additionalneeds: { type: string }

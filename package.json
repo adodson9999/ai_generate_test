@@ -1,0 +1,15 @@
+{
+  "name": "ai-generated-test-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Demo of AI-assisted test generation: NL spec + OpenAPI in, Playwright + Cypress out. Targets the public Restful-Booker API.",
+  "scripts": {
+    "test:playwright": "playwright test",
+    "test:cypress": "cypress run"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "cypress": "^13.13.0",
+    "typescript": "^5.5.0"
+  }
+}
