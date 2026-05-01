@@ -63,17 +63,3 @@ jobs:
           name: perf-results
           path: perf-results/
 
-  publish-report:
-    runs-on: ubuntu-latest
-    needs: [test-playwright, test-cypress, parity-check]
-    if: github.ref == 'refs/heads/main' && needs.test-playwright.result == 'success' && needs.test-cypress.result == 'success' && needs.parity-check.result == 'success'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: playwright-report
-          path: public/playwright-report
-      - uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
