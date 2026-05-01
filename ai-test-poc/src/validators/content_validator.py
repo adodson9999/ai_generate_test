@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 
-from src.healing.ollama_client import OllamaClient
+from healing.ollama_client import OllamaClient
 
 logger = logging.getLogger(__name__)
 

@@ -66,12 +66,17 @@ class HallucinationTracker:
             "status": "PASS" if self.get_rate() < 0.05 else "FAIL",
         }
 
-    def save_report(self, filename: str = "hallucination_report.json"):
+    def save_report(
+        self,
+        filename: str = "hallucination_report.json",
+        output_dir: Path | None = None,
+    ):
         """Save the hallucination report to disk."""
-        REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+        report_dir = output_dir or REPORTS_DIR
+        report_dir.mkdir(parents=True, exist_ok=True)
         report = self.get_summary()
         report["events"] = [
             {"category": e.category, "description": e.description, "context": e.context}
             for e in self._events
         ]
-        (REPORTS_DIR / filename).write_text(json.dumps(report, indent=2))
+        (report_dir / filename).write_text(json.dumps(report, indent=2))

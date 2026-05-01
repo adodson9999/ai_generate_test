@@ -12,7 +12,7 @@ import logging
 import time
 from pathlib import Path
 
-from src.healing.ollama_client import OllamaClient
+from healing.ollama_client import OllamaClient
 
 logger = logging.getLogger(__name__)
 

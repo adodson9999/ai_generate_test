@@ -1,20 +1,11 @@
 import { test, expect } from './fixtures/auth-token';
 import { getValidator } from './helpers/schema-validator';
+import { bookingFactory } from './factories/booking-factory';
 
 const BASE_URL = 'https://restful-booker.herokuapp.com';
 
 function buildBooking() {
-  return {
-    firstname: `John_${Math.random().toString(36).substring(7)}`,
-    lastname: `Doe_${Math.random().toString(36).substring(7)}`,
-    totalprice: Math.floor(Math.random() * 1000),
-    depositpaid: true,
-    bookingdates: {
-      checkin: '2026-01-01',
-      checkout: '2026-01-10'
-    },
-    additionalneeds: 'Breakfast'
-  };
+  return bookingFactory.build();
 }
 
 test.describe('Booking CRUD Lifecycle', () => {
@@ -61,8 +52,9 @@ test.describe('Booking CRUD Lifecycle', () => {
   test('3. Update the entire booking (PUT)', async ({ request, authToken }) => {
     expect(bookingId).toBeDefined();
     
+    const PUT_SENTINEL_PRICE = 9999; // distinguishes PUT-updated record from default factory output
     updatedBooking = buildBooking();
-    updatedBooking.totalprice = 9999;
+    updatedBooking.totalprice = PUT_SENTINEL_PRICE;
     
     const res = await request.put(`${BASE_URL}/booking/${bookingId}`, {
       headers: { Cookie: `token=${authToken}` },

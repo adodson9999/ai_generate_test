@@ -14,11 +14,6 @@
               ┌──────┴──────┐
               │ parity-check│
               │  (depends)  │
-              └──────┬──────┘
-                     │
-              ┌──────┴──────┐
-              │publish-report│
-              │  (always)   │
               └─────────────┘
 ```
 
@@ -30,7 +25,11 @@
 | `test-cypress` | PR + push | none | ~30s |
 | `parity-check` | PR + push | playwright + cypress | ~60s |
 | `perf-budget` | push to main | none | ~30s |
-| `publish-report` | always | all above | ~10s |
+
+## Future Work
+
+- **Report publishing** (GitHub Pages or artifact upload) - tracked as a separate feature
+- **PR comment** with release-readiness grid - tracked in Feature Implementation Plan
 
 ## Private Repo Notes
 

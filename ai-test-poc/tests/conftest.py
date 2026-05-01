@@ -11,26 +11,23 @@ Provides:
 
 import sys
 import json
+import os
 import pytest
 import logging
 from pathlib import Path
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Add src to path for development installs
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from src.healing.ollama_client import OllamaClient
-from src.healing.healer import HealingPage
-from src.validators.content_validator import ContentValidator
-from src.generators.data_factory import LLMDataFactory
-from src.monitoring.hallucination_tracker import HallucinationTracker
-import os
+from healing.ollama_client import OllamaClient
+from healing.healer import HealingPage
+from validators.content_validator import ContentValidator
+from generators.data_factory import LLMDataFactory
+from monitoring.hallucination_tracker import HallucinationTracker
 
 logger = logging.getLogger(__name__)
 
 REPORTS_DIR = Path(__file__).parent.parent / "reports"
-
-# Force headless mode — prevents browser windows from opening
-os.environ.setdefault("PWHEADLESS", "1")
 
 
 @pytest.fixture(scope="session")
@@ -41,11 +38,14 @@ def browser_context_args(browser_context_args):
 
 @pytest.fixture(scope="session")
 def ollama_client():
-    """Session-scoped OllamaClient — reused across all tests."""
+    """Session-scoped OllamaClient — reused across all tests.
+    
+    Model is read from OLLAMA_MODEL env var; defaults to llama3:8b.
+    """
     client = OllamaClient(
         base_url="http://localhost:11434",
-        model="llama3:8b",
-        timeout=30,
+        # Model name comes from env var OLLAMA_MODEL, default llama3:8b
+        timeout=60,
         max_retries=2,
     )
     yield client
@@ -59,9 +59,10 @@ def ollama_available(ollama_client):
     """Check if Ollama is available — skip LLM tests if not."""
     available = ollama_client.is_available()
     if not available:
+        model = os.environ.get("OLLAMA_MODEL", "llama3:8b")
         pytest.skip(
-            "Ollama is not available at localhost:11434. "
-            "Start it with: ollama serve && ollama pull llama3:8b"
+            f"Ollama is not available at localhost:11434. "
+            f"Start it with: ollama serve && ollama pull {model}"
         )
     return True
 

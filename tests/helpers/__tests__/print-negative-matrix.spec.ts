@@ -7,7 +7,7 @@ test('Generate Matrix', () => {
   const cases = generateNegativeCases();
 
   const output = cases.map(c => 
-    `| ${c.name} | ${c.expectedStatus} | ${c.isQuirk ? 'Quirk: ' + c.isQuirk : ''} |`
+    `| ${c.name} | ${c.expectedStatus} | ${c.quirk ? 'Quirk: ' + c.quirk : ''} |`
   ).join('\n');
 
   const markdown = `# Negative Test Matrix\n\n| Case | Expected Status | Notes |\n|---|---|---|\n${output}\n`;

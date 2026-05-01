@@ -23,11 +23,12 @@ const datasets = operationIds.map((opId, idx) => {
   const colors = ['#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40'];
   const color = colors[idx % colors.length];
   const data = runs.map(run => {
-    const samples = run.samples.filter(s => s.operationId === opId).map(s => s.latencyMs).sort((a,b) => a-b);
-    if (samples.length === 0) return null;
-    const measured = samples.slice(5);
+    const raw = run.samples.filter(s => s.operationId === opId).map(s => s.latencyMs);
+    if (raw.length === 0) return null;
+    const measured = raw.slice(5).sort((a,b) => a-b);
+    if (measured.length === 0) return null;
     const p95idx = Math.ceil(0.95 * measured.length) - 1;
-    return measured[Math.max(0, p95idx)] ? Number(measured[Math.max(0, p95idx)].toFixed(0)) : null;
+    return Number(measured[Math.max(0, p95idx)].toFixed(0));
   });
   return { label: opId, data, borderColor: color, backgroundColor: color + '33', fill: false, tension: 0.3 };
 });

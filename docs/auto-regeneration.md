@@ -2,44 +2,47 @@
 
 ## Overview
 
-This pipeline closes the loop between spec changes and test generation. When an OpenAPI fragment is edited, tests are automatically regenerated and verified.
+This pipeline detects spec changes and prepares for test regeneration. **Current status: dry-run only.** The LLM call and auto-PR creation are not yet implemented.
 
-## Sequence Diagram
+## Sequence Diagram (Current State)
 
 ```mermaid
 sequenceDiagram
     participant Dev as Developer
     participant Git as GitHub
     participant CI as GitHub Actions
-    participant LLM as LLM API
-    participant Tests as Test Suite
 
     Dev->>Git: Push spec change (specs/*.yaml)
     Git->>CI: Trigger spec-drift workflow
     CI->>CI: Detect changed fragments (spec-diff.js)
-    CI->>LLM: Send hero prompt + fragment
-    LLM->>CI: Return generated test code
-    CI->>Tests: Write test files
-    CI->>Tests: Run test suite
-    Tests->>CI: Pass/Fail result
-    alt Tests Pass
-        CI->>Git: Open PR (ready for review)
-    else Tests Fail
-        CI->>Git: Open Draft PR (failure highlighted)
-    end
-    Dev->>Git: Review & merge
+    CI->>CI: Dry-run regenerate (no LLM call yet)
+    CI->>Dev: Comment on PR with diff summary
+    Note over CI: Future: wire scripts/regenerate-tests.js to an LLM API
+    Note over CI,Git: Future: auto-PR creation (peter-evans/create-pull-request)
 ```
 
 ## Components
 
 1. **`scripts/spec-diff.js`** — Detects which specs changed and summarizes changes
-2. **`scripts/regenerate-tests.js`** — Calls LLM API with hero prompt + spec, writes test files
+2. **`scripts/regenerate-tests.js`** — Validates hero prompt + spec (LLM call is TODO)
 3. **`.github/workflows/spec-drift.yml`** — Triggers on spec changes
 
-## Cost Guardrails
+## What Works Today
+
+- Spec-change detection (`spec-diff.js`) runs and summarizes diffs
+- Dry-run mode validates that the hero prompt and spec fragment load correctly
+- CI workflow triggers and reports changes
+
+## What's Not Yet Implemented
+
+- Actual LLM API call to generate test code
+- Auto-PR creation with generated tests
+- Test execution of generated code before PR
+
+## Cost Guardrails (for when LLM call is wired)
 
 - Maximum 50k characters per fragment (prevents runaway costs)
-- Token count is logged per regeneration
+- Token count will be logged per regeneration
 - Estimated cost: ~$0.05-0.15 per regeneration at Claude Sonnet rates
 - At 1 spec change/day: ~$1.50-4.50/month
 

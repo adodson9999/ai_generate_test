@@ -6,8 +6,8 @@ Tests data quality, schema compliance, and edge case coverage.
 """
 
 import pytest
-from src.generators.data_factory import LLMDataFactory, LEAD_SCHEMA
-from src.healing.ollama_client import OllamaClient
+from generators.data_factory import LLMDataFactory, LEAD_SCHEMA
+from healing.ollama_client import OllamaClient
 
 
 class TestSchemaValidation:

@@ -9,8 +9,8 @@ import json
 import pytest
 from pathlib import Path
 
-from src.monitoring.drift_detector import DriftDetector
-from src.monitoring.hallucination_tracker import HallucinationTracker
+from monitoring.drift_detector import DriftDetector
+from monitoring.hallucination_tracker import HallucinationTracker
 
 
 class TestHallucinationTracker:
@@ -64,13 +64,11 @@ class TestHallucinationTracker:
         tracker.record_hallucination("invalid_data", "test")
         assert tracker.get_summary()["status"] == "FAIL"
 
-    def test_report_saves_to_disk(self, tmp_path, monkeypatch):
-        import src.monitoring.hallucination_tracker as mod
-        monkeypatch.setattr(mod, "REPORTS_DIR", tmp_path)
+    def test_report_saves_to_disk(self, tmp_path):
         tracker = HallucinationTracker()
         tracker.record_call()
         tracker.record_hallucination("test_cat", "test desc")
-        tracker.save_report("test_report.json")
+        tracker.save_report("test_report.json", output_dir=tmp_path)
         report = json.loads((tmp_path / "test_report.json").read_text())
         assert report["total_hallucinations"] == 1
 

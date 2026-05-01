@@ -1,18 +1,19 @@
 # AI-Generated Test Demo
 
-This repo demonstrates AI-assisted test generation: a natural-language spec and an OpenAPI 3 fragment go in, Playwright and Cypress test suites come out. Tests run against the public Restful-Booker API and pass without any setup beyond `npm install`.
+This repo demonstrates AI-assisted test generation and QA automation strategy: natural-language specs plus OpenAPI fragments go in, Playwright and Cypress suites come out, with parity checks, perf checks, and an AI-focused Python POC alongside the JS test harnesses.
 
 ## What's here
 
-- `specs/booking-lookup.feature` — the NL acceptance criteria (input)
-- `specs/booking-openapi.yaml` — the OpenAPI 3 fragment (input)
-- `prompts/api-test-gen.md` — the reusable prompt template that turns the inputs into tests
-- `tests/booking.spec.ts` — generated Playwright suite (output)
-- `cypress/e2e/booking.cy.js` — generated Cypress suite (output)
+- `specs/` - source-of-truth feature files and OpenAPI fragments (`booking`, `auth`, lifecycle, negative matrix, perf budgets)
+- `tests/` - Playwright API suites, fixtures, factories, helpers, and perf/concurrency coverage
+- `cypress/e2e/` - Cypress parity suites for core functional and negative-path scenarios
+- `scripts/parity-check.js` - cross-runner parity report (Playwright vs Cypress)
+- `ai-test-poc/` - Python AI testing POC (self-healing locators, content validation, synthetic data, model governance)
+- `antigravity-plans/` and `cowork-skills/` - implementation planning artifacts and reusable QA skill prompts
 
 ## Methodology
 
-The interesting artifact is `prompts/api-test-gen.md`. It enforces a deterministic output contract: one positive test per success response, one negative test per error response, presence-and-type assertions for every required schema field, constraint assertions (format/minimum/regex/enum), and non-functional ACs (latency) as separate assertions. Same input produces both Playwright and Cypress — the abstraction sits above the runner.
+The anchor artifact is `prompts/api-test-gen.md`. It enforces a deterministic output contract: one positive test per success response, one negative test per error response, presence-and-type assertions for required schema fields, constraint assertions (format/minimum/regex/enum), and non-functional ACs (latency) as separate assertions. The same requirements are expressed in both Playwright and Cypress to keep parity visible.
 
 ## Run
 
@@ -20,14 +21,20 @@ The interesting artifact is `prompts/api-test-gen.md`. It enforces a determinist
 # 1. Install dependencies
 npm install
 
-# 2. Run the Playwright suite
+# 2. Install Playwright's browsers (first run only)
+npx playwright install chromium
+
+# 3. Run the Playwright suite
 npm run test:playwright
 
-# 3. Run the Cypress suite
+# 4. Run the Cypress suite
 npm run test:cypress
+
+# 5. Run cross-runner parity
+node scripts/parity-check.js
 ```
 
-Both suites hit `https://restful-booker.herokuapp.com` directly. They discover a live booking ID at runtime (the public sandbox resets every ~10 minutes and IDs rotate), so there is nothing to seed and no fixture to keep in sync.
+Suites hit `https://restful-booker.herokuapp.com` directly. They discover a live booking ID at runtime (the public sandbox resets periodically and IDs rotate), so there is no local fixture seeding step.
 
 ## Target API
 
@@ -44,4 +51,16 @@ While the read paths (`GET`) are public, the mutation endpoints (`PUT`, `PATCH`,
 3. Set `Framework:` to `playwright` or `cypress` and run the prompt against your model of choice.
 4. Drop the output into `tests/booking.spec.ts` or `cypress/e2e/booking.cy.js`.
 
-The output contract in the prompt is what keeps the two suites in lockstep — change the spec, regenerate both, ship.
+The output contract in the prompt is what keeps both runners in lockstep.
+
+## Planning and review artifacts
+
+- `Feature_Implementation_Plan_20260501_135857.md` - capability audit plus prioritized feature roadmap with an execution checklist
+- `REVIEW_IMPLEMENTATION_PLAN_20260501_143637_myself.md` - implementation review, findings register, and closure tracker
+
+These docs are maintained as living planning artifacts and should be updated as features are completed.
+
+## CI notes
+
+- Main CI workflow runs Playwright, Cypress, parity-check, and perf-budget jobs.
+- GitHub Pages publishing was intentionally removed from CI to avoid `gh-pages` push permission failures.

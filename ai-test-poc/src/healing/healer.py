@@ -91,7 +91,7 @@ class HealingPage:
             loc = self._page.locator(selector)
             loc.wait_for(timeout=timeout)
             return loc
-        except (PlaywrightError, Exception):
+        except PlaywrightError:
             logger.info("Selector failed: %s — attempting AI healing", selector)
             return self._heal(selector)
 

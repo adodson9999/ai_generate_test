@@ -1,13 +1,15 @@
 """
 OllamaClient — Typed Python wrapper around the Ollama REST API.
 
-Targets a local Ollama instance running Llama 4 Scout.
+Targets a local Ollama instance. Default model is llama3:8b;
+override via OLLAMA_MODEL env var (e.g. llama4-scout).
 All inference runs on-premise — no data leaves the network.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import time
 import logging
 from dataclasses import dataclass, field
@@ -42,12 +44,12 @@ class OllamaClient:
     def __init__(
         self,
         base_url: str = "http://localhost:11434",
-        model: str = "llama3:8b",
+        model: str | None = None,
         timeout: int = 30,
         max_retries: int = 2,
     ):
         self.base_url = base_url.rstrip("/")
-        self.model = model
+        self.model = model or os.environ.get("OLLAMA_MODEL", "llama3:8b")
         self.timeout = timeout
         self.max_retries = max_retries
         self._call_log: list[dict] = []
