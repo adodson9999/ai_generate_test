@@ -5,11 +5,24 @@
   "description": "Demo of AI-assisted test generation: NL spec + OpenAPI in, Playwright + Cypress out. Targets the public Restful-Booker API.",
   "scripts": {
     "test:playwright": "playwright test",
-    "test:cypress": "cypress run"
+    "test:cypress": "cypress run --spec 'cypress/e2e/auth.cy.js,cypress/e2e/booking.cy.js,cypress/e2e/booking-lifecycle.cy.js,cypress/e2e/booking.negative.cy.js'",
+    "test:perf": "playwright test tests/perf.spec.ts --config playwright.perf.config.ts",
+    "test:slow": "playwright test tests/concurrency.spec.ts --config playwright.perf.config.ts",
+    "test:slow:cypress": "cypress run --spec cypress/e2e/concurrency.cy.js",
+    "perf:report": "node scripts/perf-report.js"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.4.0",
     "@playwright/test": "^1.47.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^25.6.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "cypress": "^13.13.0",
+    "js-yaml": "^4.1.1",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^5.1.1",
+    "mochawesome-report-generator": "^6.3.2",
     "typescript": "^5.5.0"
   }
 }

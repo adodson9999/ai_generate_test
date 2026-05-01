@@ -1,0 +1,42 @@
+# Performance Budgets — per-endpoint p50 and p95 latency thresholds (ms)
+
+endpoints:
+  # GET endpoints — 800ms p95 default
+  - operationId: getBooking
+    path: /booking/{id}
+    method: get
+    p50_ms: 400
+    p95_ms: 800
+
+  # POST endpoints — 1500ms p95 default
+  - operationId: createAuth
+    path: /auth
+    method: post
+    p50_ms: 500
+    p95_ms: 1500
+
+  - operationId: createBooking
+    path: /booking
+    method: post
+    p50_ms: 500
+    p95_ms: 1500
+
+  # PUT/PATCH endpoints — 1500ms p95 default
+  - operationId: updateBooking
+    path: /booking/{id}
+    method: put
+    p50_ms: 500
+    p95_ms: 1500
+
+  - operationId: patchBooking
+    path: /booking/{id}
+    method: patch
+    p50_ms: 500
+    p95_ms: 1500
+
+  # DELETE endpoints — 1000ms p95 default
+  - operationId: deleteBooking
+    path: /booking/{id}
+    method: delete
+    p50_ms: 500
+    p95_ms: 1000

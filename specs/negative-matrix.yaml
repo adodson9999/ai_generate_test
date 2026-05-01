@@ -1,0 +1,26 @@
+endpoints:
+  - operationId: createBooking
+    path: /booking
+    method: post
+    spec: booking-lifecycle-openapi.yaml
+    apply: [missing_required, wrong_type, format, constraint, auth, method]
+  - operationId: getBooking
+    path: /booking/{id}
+    method: get
+    spec: booking-lifecycle-openapi.yaml
+    apply: [resource]
+  - operationId: updateBooking
+    path: /booking/{id}
+    method: put
+    spec: booking-lifecycle-openapi.yaml
+    apply: [missing_required, wrong_type, auth, resource]
+  - operationId: patchBooking
+    path: /booking/{id}
+    method: patch
+    spec: booking-lifecycle-openapi.yaml
+    apply: [wrong_type, auth, resource]
+  - operationId: deleteBooking
+    path: /booking/{id}
+    method: delete
+    spec: booking-lifecycle-openapi.yaml
+    apply: [auth, resource]

@@ -1,0 +1,37 @@
+[project]
+name = "ai-test-poc"
+version = "0.1.0"
+description = "AI-Augmented Test Automation POC — Self-Healing, Content Validation, Synthetic Data"
+requires-python = ">=3.12"
+dependencies = [
+    "playwright>=1.48.0",
+    "pytest>=8.0.0",
+    "pytest-playwright>=0.5.0",
+    "requests>=2.31.0",
+    "jsonschema>=4.21.0",
+    "allure-pytest>=2.13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.4.0",
+    "mypy>=1.10.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests that involve LLM inference (deselect with '-m \"not slow\"')",
+    "healing: self-healing locator tests",
+    "validation: content validation tests",
+    "datagen: synthetic data generation tests",
+    "drift: model drift detection tests",
+]
+addopts = "-v --tb=short --browser chromium"
+
+[tool.playwright]
+headless = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

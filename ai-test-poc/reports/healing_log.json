@@ -1,0 +1,20 @@
+[
+  {
+    "broken": "#restful-booker-healing-poc-broken-id-xyz",
+    "healed": "text=Ping",
+    "confidence": 0.95,
+    "reasoning": "Stub: Ping link is present on the apidoc page",
+    "url": "https://restful-booker.herokuapp.com/apidoc/index.html",
+    "latency_ms": 16,
+    "verified": true
+  },
+  {
+    "broken": "#restful-booker-healing-poc-broken-id-xyz",
+    "healed": "text=Ping",
+    "confidence": 0.95,
+    "reasoning": "Stub: Ping link is present on the apidoc page",
+    "url": "https://restful-booker.herokuapp.com/apidoc/index.html",
+    "latency_ms": 21,
+    "verified": true
+  }
+]

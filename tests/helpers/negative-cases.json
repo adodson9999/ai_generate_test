@@ -1,0 +1,550 @@
+[
+  {
+    "name": "POST /booking — missing required field 'firstname'",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "post",
+    "body": {
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 500,
+    "quirk": "API returns 500 instead of 400 for missing required fields on POST"
+  },
+  {
+    "name": "POST /booking — missing required field 'lastname'",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "post",
+    "body": {
+      "firstname": "John",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 500,
+    "quirk": "API returns 500 instead of 400 for missing required fields on POST"
+  },
+  {
+    "name": "POST /booking — missing required field 'totalprice'",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "post",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 500,
+    "quirk": "API returns 500 instead of 400 for missing required fields on POST"
+  },
+  {
+    "name": "POST /booking — missing required field 'depositpaid'",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "post",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 500,
+    "quirk": "API returns 500 instead of 400 for missing required fields on POST"
+  },
+  {
+    "name": "POST /booking — missing required field 'bookingdates'",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "post",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 500,
+    "quirk": "API returns 500 instead of 400 for missing required fields on POST"
+  },
+  {
+    "name": "POST /booking — 'totalprice' as string",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "post",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": "111",
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 200,
+    "needsAuth": false,
+    "quirk": "API silently accepts string where number is expected"
+  },
+  {
+    "name": "POST /booking — 'firstname' as number",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "post",
+    "body": {
+      "firstname": 123,
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 500,
+    "needsAuth": false,
+    "quirk": "API returns 500 instead of 400 when firstname is a number"
+  },
+  {
+    "name": "POST /booking — invalid date format for 'checkin'",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "post",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "not-a-date",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 200,
+    "needsAuth": false,
+    "quirk": "API silently accepts invalid date strings"
+  },
+  {
+    "name": "POST /booking — 'totalprice' less than minimum (0)",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "post",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": -10,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 200,
+    "needsAuth": false,
+    "quirk": "API silently accepts negative totalprice"
+  },
+  {
+    "name": "PATCH /booking — wrong HTTP method",
+    "operationId": "createBooking",
+    "path": "/booking",
+    "method": "patch",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 404,
+    "quirk": "API returns 404 instead of 405 for wrong HTTP method"
+  },
+  {
+    "name": "GET /booking/{id} — non-existent resource ID",
+    "operationId": "getBooking",
+    "path": "/booking/99999999",
+    "method": "get",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 404
+  },
+  {
+    "name": "PUT /booking/{id} — missing required field 'firstname'",
+    "operationId": "updateBooking",
+    "path": "/booking/{id}",
+    "method": "put",
+    "body": {
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 400,
+    "needsAuth": true
+  },
+  {
+    "name": "PUT /booking/{id} — missing required field 'lastname'",
+    "operationId": "updateBooking",
+    "path": "/booking/{id}",
+    "method": "put",
+    "body": {
+      "firstname": "John",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 400,
+    "needsAuth": true
+  },
+  {
+    "name": "PUT /booking/{id} — missing required field 'totalprice'",
+    "operationId": "updateBooking",
+    "path": "/booking/{id}",
+    "method": "put",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 400,
+    "needsAuth": true
+  },
+  {
+    "name": "PUT /booking/{id} — missing required field 'depositpaid'",
+    "operationId": "updateBooking",
+    "path": "/booking/{id}",
+    "method": "put",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 400,
+    "needsAuth": true
+  },
+  {
+    "name": "PUT /booking/{id} — missing required field 'bookingdates'",
+    "operationId": "updateBooking",
+    "path": "/booking/{id}",
+    "method": "put",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 400,
+    "needsAuth": true
+  },
+  {
+    "name": "PUT /booking/{id} — 'totalprice' as string",
+    "operationId": "updateBooking",
+    "path": "/booking/{id}",
+    "method": "put",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": "111",
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 200,
+    "needsAuth": true,
+    "quirk": "API silently accepts string where number is expected"
+  },
+  {
+    "name": "PUT /booking/{id} — 'firstname' as number",
+    "operationId": "updateBooking",
+    "path": "/booking/{id}",
+    "method": "put",
+    "body": {
+      "firstname": 123,
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 500,
+    "needsAuth": true,
+    "quirk": "API returns 500 instead of 400 when firstname is a number"
+  },
+  {
+    "name": "PUT /booking/{id} — missing auth token",
+    "operationId": "updateBooking",
+    "path": "/booking/{id}",
+    "method": "put",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 403
+  },
+  {
+    "name": "PUT /booking/{id} — invalid auth token",
+    "operationId": "updateBooking",
+    "path": "/booking/{id}",
+    "method": "put",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "headers": {
+      "Cookie": "token=invalid123"
+    },
+    "expectedStatus": 403
+  },
+  {
+    "name": "PUT /booking/{id} — non-existent resource ID",
+    "operationId": "updateBooking",
+    "path": "/booking/99999999",
+    "method": "put",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 405,
+    "needsAuth": true,
+    "quirk": "API returns 405 instead of 404 for non-existent resource on protected endpoints"
+  },
+  {
+    "name": "PATCH /booking/{id} — 'totalprice' as string",
+    "operationId": "patchBooking",
+    "path": "/booking/{id}",
+    "method": "patch",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": "111",
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 200,
+    "needsAuth": true,
+    "quirk": "API silently accepts string where number is expected"
+  },
+  {
+    "name": "PATCH /booking/{id} — 'firstname' as number",
+    "operationId": "patchBooking",
+    "path": "/booking/{id}",
+    "method": "patch",
+    "body": {
+      "firstname": 123,
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 200,
+    "needsAuth": true,
+    "quirk": "API silently accepts number where string is expected"
+  },
+  {
+    "name": "PATCH /booking/{id} — missing auth token",
+    "operationId": "patchBooking",
+    "path": "/booking/{id}",
+    "method": "patch",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 403
+  },
+  {
+    "name": "PATCH /booking/{id} — invalid auth token",
+    "operationId": "patchBooking",
+    "path": "/booking/{id}",
+    "method": "patch",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "headers": {
+      "Cookie": "token=invalid123"
+    },
+    "expectedStatus": 403
+  },
+  {
+    "name": "PATCH /booking/{id} — non-existent resource ID",
+    "operationId": "patchBooking",
+    "path": "/booking/99999999",
+    "method": "patch",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 405,
+    "needsAuth": true,
+    "quirk": "API returns 405 instead of 404 for non-existent resource on protected endpoints"
+  },
+  {
+    "name": "DELETE /booking/{id} — missing auth token",
+    "operationId": "deleteBooking",
+    "path": "/booking/{id}",
+    "method": "delete",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 403
+  },
+  {
+    "name": "DELETE /booking/{id} — invalid auth token",
+    "operationId": "deleteBooking",
+    "path": "/booking/{id}",
+    "method": "delete",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "headers": {
+      "Cookie": "token=invalid123"
+    },
+    "expectedStatus": 403
+  },
+  {
+    "name": "DELETE /booking/{id} — non-existent resource ID",
+    "operationId": "deleteBooking",
+    "path": "/booking/99999999",
+    "method": "delete",
+    "body": {
+      "firstname": "John",
+      "lastname": "Doe",
+      "totalprice": 111,
+      "depositpaid": true,
+      "bookingdates": {
+        "checkin": "2026-01-01",
+        "checkout": "2026-01-02"
+      },
+      "additionalneeds": "Breakfast"
+    },
+    "expectedStatus": 405,
+    "needsAuth": true,
+    "quirk": "API returns 405 instead of 404 for non-existent resource on protected endpoints"
+  }
+]

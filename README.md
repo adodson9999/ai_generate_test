@@ -31,7 +31,11 @@ Both suites hit `https://restful-booker.herokuapp.com` directly. They discover a
 
 ## Target API
 
-[Restful-Booker](https://restful-booker.herokuapp.com/) — a public sandbox API maintained for testing tool demos. No auth required for the read paths exercised here.
+[Restful-Booker](https://restful-booker.herokuapp.com/) — a public sandbox API maintained for testing tool demos.
+
+## Auth Flow
+
+While the read paths (`GET`) are public, the mutation endpoints (`PUT`, `PATCH`, `DELETE`) require an auth token. The suite generates this token on the fly via `POST /auth` using default sandbox credentials. Tests needing auth consume a Playwright or Cypress fixture that supplies the token. (Note: Restful-Booker's auth API has some quirks, such as returning `200 OK` even for bad or missing credentials, which the generated tests reflect).
 
 ## Regenerating the tests
 

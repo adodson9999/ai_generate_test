@@ -1,0 +1,117 @@
+paths:
+  /booking:
+    post:
+      summary: Creates a new booking in the API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [bookingid, booking]
+                properties:
+                  bookingid: { type: integer }
+                  booking: { $ref: '#/components/schemas/Booking' }
+
+  /booking/{id}:
+    get:
+      summary: Returns a specific booking based upon the booking id provided
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Booking' }
+        '404':
+          description: Not Found
+    
+    put:
+      summary: Updates a current booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Booking' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Booking' }
+
+    patch:
+      summary: Updates a current booking with a partial payload
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname: { type: string }
+                lastname: { type: string }
+                totalprice: { type: number, minimum: 0 }
+                depositpaid: { type: boolean }
+                bookingdates:
+                  type: object
+                  properties:
+                    checkin: { type: string, format: date }
+                    checkout: { type: string, format: date }
+                additionalneeds: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Booking' }
+
+    delete:
+      summary: Returns the ids of all the bookings that exist within the API. Can take optional query strings to search and return a subset of booking ids.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '201':
+          description: Created
+
+components:
+  schemas:
+    Booking:
+      type: object
+      required: [firstname, lastname, totalprice, depositpaid, bookingdates]
+      properties:
+        firstname: { type: string }
+        lastname:  { type: string }
+        totalprice: { type: number, minimum: 0 }
+        depositpaid: { type: boolean }
+        bookingdates:
+          type: object
+          required: [checkin, checkout]
+          properties:
+            checkin:  { type: string, format: date }
+            checkout: { type: string, format: date }
+        additionalneeds: { type: string }

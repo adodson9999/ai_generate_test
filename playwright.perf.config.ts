@@ -2,9 +2,8 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  testIgnore: ['**/perf.spec.ts', '**/concurrency.spec.ts'],
-  timeout: 30_000,
-  retries: 1,
+  timeout: 120_000,
+  retries: 0,
   reporter: [['list']],
   use: {
     extraHTTPHeaders: { 'Accept': 'application/json' },

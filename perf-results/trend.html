@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Performance Trend</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>body{font-family:system-ui;margin:2rem;background:#1a1a2e;color:#e0e0e0}canvas{max-width:900px;margin:0 auto;display:block}h1{text-align:center;color:#e94560}</style>
+</head>
+<body>
+  <h1>API Performance Trend (p95 latency, ms)</h1>
+  <canvas id="chart"></canvas>
+  <script>
+    new Chart(document.getElementById("chart"), {
+      type: "line",
+      data: { labels: ["Run 1"], datasets: [{"label":"getBooking","data":[52],"borderColor":"#FF6384","backgroundColor":"#FF638433","fill":false,"tension":0.3},{"label":"createAuth","data":[49],"borderColor":"#36A2EB","backgroundColor":"#36A2EB33","fill":false,"tension":0.3},{"label":"createBooking","data":[50],"borderColor":"#FFCE56","backgroundColor":"#FFCE5633","fill":false,"tension":0.3},{"label":"updateBooking","data":[47],"borderColor":"#4BC0C0","backgroundColor":"#4BC0C033","fill":false,"tension":0.3},{"label":"patchBooking","data":[47],"borderColor":"#9966FF","backgroundColor":"#9966FF33","fill":false,"tension":0.3},{"label":"deleteBooking","data":[46],"borderColor":"#FF9F40","backgroundColor":"#FF9F4033","fill":false,"tension":0.3}] },
+      options: {
+        scales: { y: { beginAtZero: true, title: { display: true, text: "p95 (ms)", color: "#e0e0e0" }, grid: { color: "#333" }, ticks: { color: "#e0e0e0" } }, x: { grid: { color: "#333" }, ticks: { color: "#e0e0e0" } } },
+        plugins: { legend: { labels: { color: "#e0e0e0" } } }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+name: Nightly Scheduled Run
+on:
+  schedule:
+    - cron: '0 6 * * *'  # 6 AM UTC daily
+  workflow_dispatch: {}
+
+jobs:
+  nightly-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:playwright
+      - run: npm run test:cypress
+      - run: npm run test:perf
+      - run: npm run perf:report
+
+  # TODO: Uncomment and add Slack webhook URL to repository secrets as SLACK_WEBHOOK_URL
+  # notify-on-failure:
+  #   runs-on: ubuntu-latest
+  #   needs: [nightly-tests]
+  #   if: failure()
+  #   steps:
+  #     - uses: 8398a7/action-slack@v3
+  #       with:
+  #         status: failure
+  #         text: 'Nightly test run failed! Check: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+  #       env:
+  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

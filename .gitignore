@@ -5,3 +5,11 @@ cypress/screenshots/
 cypress/videos/
 .DS_Store
 *.log
+
+# Python (ai-test-poc)
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/

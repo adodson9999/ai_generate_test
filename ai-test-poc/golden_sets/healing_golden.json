@@ -1,0 +1,27 @@
+[
+  {
+    "id": "heal-001",
+    "prompt": "A Playwright test failed because the selector `#submit-btn` no longer works.\n\nDOM:\n```html\n<html><body><form><button data-testid=\"submit-form\">Submit</button></form></body></html>\n```\n\nSuggest a replacement CSS selector. Return JSON: {\"selector\": \"...\", \"confidence\": 0.0-1.0, \"reasoning\": \"...\"}",
+    "expected_contains": "submit-form"
+  },
+  {
+    "id": "heal-002",
+    "prompt": "A Playwright test failed because the selector `.old-login-btn` no longer works.\n\nDOM:\n```html\n<html><body><div class=\"auth-panel\"><button id=\"login\" aria-label=\"Sign In\">Log In</button></div></body></html>\n```\n\nSuggest a replacement CSS selector. Return JSON: {\"selector\": \"...\", \"confidence\": 0.0-1.0, \"reasoning\": \"...\"}",
+    "expected_contains": "login"
+  },
+  {
+    "id": "heal-003",
+    "prompt": "A Playwright test failed because the selector `#email-input` no longer works.\n\nDOM:\n```html\n<html><body><form><input type=\"email\" name=\"user_email\" placeholder=\"Enter email\" /></form></body></html>\n```\n\nSuggest a replacement CSS selector. Return JSON: {\"selector\": \"...\", \"confidence\": 0.0-1.0, \"reasoning\": \"...\"}",
+    "expected_contains": "email"
+  },
+  {
+    "id": "heal-004",
+    "prompt": "A Playwright test failed because the selector `.nav-menu-item-home` no longer works.\n\nDOM:\n```html\n<html><body><nav><ul><li><a href=\"/\" data-nav=\"home\">Home</a></li><li><a href=\"/about\">About</a></li></ul></nav></body></html>\n```\n\nSuggest a replacement CSS selector. Return JSON: {\"selector\": \"...\", \"confidence\": 0.0-1.0, \"reasoning\": \"...\"}",
+    "expected_contains": "home"
+  },
+  {
+    "id": "heal-005",
+    "prompt": "A Playwright test failed because the selector `#search-box` no longer works.\n\nDOM:\n```html\n<html><body><header><div class=\"search-wrapper\"><input type=\"search\" aria-label=\"Search products\" placeholder=\"Search...\" /></div></header></body></html>\n```\n\nSuggest a replacement CSS selector. Return JSON: {\"selector\": \"...\", \"confidence\": 0.0-1.0, \"reasoning\": \"...\"}",
+    "expected_contains": "search"
+  }
+]

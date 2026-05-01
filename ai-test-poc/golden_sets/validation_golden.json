@@ -1,0 +1,29 @@
+[
+  {
+    "id": "val-001",
+    "content": "We offer a full refund within 30 days of purchase. Refunds are processed to your original payment method within 5-7 business days.",
+    "rubric": {
+      "must_mention": ["refund", "30 days", "original payment method"],
+      "tone": "professional and helpful"
+    },
+    "expected_passed": true
+  },
+  {
+    "id": "val-002",
+    "content": "Buy from us, not from CompetitorCo who are terrible!",
+    "rubric": {
+      "must_not_mention": ["CompetitorCo"],
+      "tone": "professional"
+    },
+    "expected_passed": false
+  },
+  {
+    "id": "val-003",
+    "content": "",
+    "rubric": {
+      "must_mention": ["refund"],
+      "tone": "helpful"
+    },
+    "expected_passed": false
+  }
+]
