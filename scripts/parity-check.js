@@ -1,28 +1,54 @@
 #!/usr/bin/env node
-const { execSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
 const tmpDir = path.resolve(__dirname, '../parity-tmp');
 if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+const paritySpecs = [
+  'tests/auth.spec.ts',
+  'tests/booking.spec.ts',
+  'tests/booking-lifecycle.spec.ts',
+  'tests/booking.negative.spec.ts',
+];
 
 console.log('=== Running Playwright with JSON reporter ===');
-try {
-  execSync(
-    `npx playwright test --ignore-pattern='**/perf.spec.ts' --ignore-pattern='**/concurrency.spec.ts' --reporter=json`,
-    { cwd: path.resolve(__dirname, '..'), stdio: ['pipe', 'pipe', 'pipe'] }
-  ).toString();
-} catch (e) {
-  // Playwright writes JSON to stdout even on failure
-  fs.writeFileSync(path.join(tmpDir, 'playwright.json'), e.stdout?.toString() || '{}');
+const pwOutFile = path.join(tmpDir, 'playwright.json');
+const pwRun = spawnSync(
+  'npx',
+  [
+    'playwright',
+    'test',
+    '--reporter=json',
+    ...paritySpecs,
+  ],
+  {
+    cwd: path.resolve(__dirname, '..'),
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      // Force JSON reporter output to file across Playwright versions.
+      PLAYWRIGHT_JSON_OUTPUT_FILE: pwOutFile,
+      PLAYWRIGHT_JSON_OUTPUT_NAME: path.basename(pwOutFile),
+    },
+  }
+);
+
+// Playwright JSON reporter writes the report to stdout. Preserve it regardless of exit code.
+const pwStdout = pwRun.stdout || '';
+const pwStderr = pwRun.stderr || '';
+if (!fs.existsSync(pwOutFile)) {
+  fs.writeFileSync(pwOutFile, pwStdout || '{}');
 }
-// On success, stdout is the JSON
-if (!fs.existsSync(path.join(tmpDir, 'playwright.json'))) {
-  const result = execSync(
-    `npx playwright test --ignore-pattern='**/perf.spec.ts' --ignore-pattern='**/concurrency.spec.ts' --reporter=json`,
-    { cwd: path.resolve(__dirname, '..') }
-  ).toString();
-  fs.writeFileSync(path.join(tmpDir, 'playwright.json'), result);
+
+const pwReportRaw = fs.readFileSync(pwOutFile, 'utf8');
+if (!pwReportRaw.trim()) {
+  console.error('ERROR: Playwright produced empty JSON output.');
+  if (pwStderr.trim()) {
+    console.error('\n=== Playwright stderr ===');
+    console.error(pwStderr);
+  }
+  process.exit(1);
 }
 
 console.log('=== Running Cypress with mochawesome reporter ===');
@@ -32,7 +58,20 @@ execSync(
 );
 
 // Parse Playwright results
-const pwRaw = JSON.parse(fs.readFileSync(path.join(tmpDir, 'playwright.json'), 'utf8'));
+const pwRawText = pwReportRaw;
+let pwRaw;
+try {
+  pwRaw = JSON.parse(pwRawText);
+} catch (_e) {
+  // Defensive parse: tolerate incidental non-JSON noise around report output
+  const jsonStart = pwRawText.indexOf('{');
+  const jsonEnd = pwRawText.lastIndexOf('}');
+  if (jsonStart >= 0 && jsonEnd > jsonStart) {
+    pwRaw = JSON.parse(pwRawText.slice(jsonStart, jsonEnd + 1));
+  } else {
+    throw new Error('Could not parse Playwright JSON report.');
+  }
+}
 const pwTests = [];
 for (const suite of pwRaw.suites || []) {
   const walkPw = (s, parentTitle) => {
@@ -93,6 +132,13 @@ const onlyCy = [...cyNames].filter(n => !pwNames.has(n));
 // Check for empty
 if (pwFiltered.length === 0) {
   console.error('ERROR: Playwright returned 0 tests. Parity check aborted.');
+  if (pwRaw?.stats) {
+    console.error(`Playwright stats: ${JSON.stringify(pwRaw.stats)}`);
+  }
+  if (pwStderr.trim()) {
+    console.error('\n=== Playwright stderr ===');
+    console.error(pwStderr);
+  }
   process.exit(1);
 }
 if (cyFiltered.length === 0) {
